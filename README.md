@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Dev Resources
+
+In the `dev_resources` folder, you'll find helpful configuration files for things like setting up your local VSCode UI.
+
 ## Available Scripts
 
 In the project directory, you can run:
