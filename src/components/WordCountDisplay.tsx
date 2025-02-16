@@ -15,7 +15,7 @@ function WordCountDisplay() {
             <h2>Word Count by Agency</h2>
             <ul>
                 {Object.entries(wordCounts).map(([agency, count]) => (
-                    <li key={agency}>{agency}: {count} words</li>
+                    <li key={agency}>{agency}: {count as number} words</li>
                 ))}
             </ul>
         </div>
