@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead, TableRow, Paper } from '@mui/material';
-
-type Agency = {
-    slug: string;
-    name: string;
-};
+import { Agency } from '../constants/Agency';
 
 const AgenciesList = () => {
     const [agencies, setAgencies] = useState([]);
@@ -49,13 +46,18 @@ const AgenciesList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortData(agencies).map((row: Agency) => (
-                            <TableRow key={row.slug}>
-                                <TableCell>{row.name}</TableCell>
-                                <TableCell>0</TableCell>
-                                <TableCell>...</TableCell>
-                            </TableRow>
-                        ))}
+                        {sortData(agencies).map((row: Agency) => {
+                            const agencyPath = `/agencies/${row.slug}`;
+                            return (
+                                <TableRow key={row.slug}>
+                                    <TableCell>
+                                        <Link to={agencyPath}>{row.name}</Link>
+                                    </TableCell>
+                                    <TableCell>0</TableCell>
+                                    <TableCell>...</TableCell>
+                                </TableRow>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </TableContainer>
