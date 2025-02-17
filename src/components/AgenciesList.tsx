@@ -44,12 +44,16 @@ const AgenciesList = () => {
                                     Name
                                 </TableSortLabel>
                             </TableCell>
+                            <TableCell>Word Count</TableCell>
+                            <TableCell>Related Titles</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {sortData(agencies).map((row: Agency) => (
                             <TableRow key={row.slug}>
                                 <TableCell>{row.name}</TableCell>
+                                <TableCell>0</TableCell>
+                                <TableCell>...</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
