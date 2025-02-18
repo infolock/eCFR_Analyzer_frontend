@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead,
 import { Agency } from '../constants/Agency';
 
 const AgenciesList = () => {
-    const [agencies, setAgencies] = useState([]);
+    const [agencies, setAgencies] = useState<Agency[]>([]);
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
     // in case we want to add more sortable columns...
     const [orderBy, setOrderBy] = useState<'name'>('name');
@@ -23,10 +23,31 @@ const AgenciesList = () => {
     };
 
     useEffect(() => {
-        fetch('http://localhost:5001/api/agencies')
-            .then((res) => res.json())
-            .then((data) => setAgencies(data))
-            .catch((err) => console.error('Error fetching data:', err));
+        const fetchData = async () => {
+            try {
+                const res = await fetch('http://localhost:5001/api/agencies');
+                console.log('Res = ', res);
+                const data = await res.json();
+                console.log('data = ', data);
+
+                const updatedAgencies: Agency[] = [];
+                for (const agency of data) {
+                    const res = await fetch(`http://localhost:5001/api/word_counts/${agency.slug}`);
+                    const data = await res.json();
+
+                    updatedAgencies.push({
+                        ...(agency as Agency),
+                        wordCount: data.wordCount,
+                    });
+                }
+
+                setAgencies(updatedAgencies);
+            } catch (err) {
+                console.error('Error fetching data:', err);
+            }
+        };
+
+        fetchData();
     }, []);
 
     return (
@@ -53,7 +74,7 @@ const AgenciesList = () => {
                                     <TableCell>
                                         <Link to={agencyPath}>{row.name}</Link>
                                     </TableCell>
-                                    <TableCell>0</TableCell>
+                                    <TableCell>{row.wordCount}</TableCell>
                                     <TableCell>...</TableCell>
                                 </TableRow>
                             );

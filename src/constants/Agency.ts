@@ -6,4 +6,5 @@ export type Agency = {
     slug: string;
     children: [];
     cfr_references: [];
+    wordCount?: number;
 };
