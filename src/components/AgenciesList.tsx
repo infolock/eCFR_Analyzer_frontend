@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead, TableRow, Paper } from '@mui/material';
 import { Agency } from '../constants/Agency';
+import { getDomain } from '../env';
 
 const AgenciesList = () => {
     const [agencies, setAgencies] = useState<Agency[]>([]);
@@ -25,14 +26,14 @@ const AgenciesList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch('http://localhost:5001/api/agencies');
+                const res = await fetch(`${getDomain()}/api/agencies`);
                 console.log('Res = ', res);
                 const data = await res.json();
                 console.log('data = ', data);
 
                 const updatedAgencies: Agency[] = [];
                 for (const agency of data) {
-                    const res = await fetch(`http://localhost:5001/api/word_counts/${agency.slug}`);
+                    const res = await fetch(`${getDomain()}/api/word_counts/${agency.slug}`);
                     const data = await res.json();
 
                     updatedAgencies.push({

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead, TableRow, Paper } from '@mui/material';
+import { getDomain } from '../env';
 
 type Title = {
     number: number;
@@ -26,7 +27,7 @@ function TitlesList() {
     };
 
     useEffect(() => {
-        fetch('http://localhost:5001/api/titles')
+        fetch(`${getDomain()}/api/titles`)
             .then((res) => res.json())
             .then((data) => setTitles(data))
             .catch((err) => console.error('Error fetching data:', err));

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Agency } from '../constants/Agency';
+import { getDomain } from '../env';
 
 const AgencyDetails = () => {
     const { slug } = useParams();
     const [agency, setAgency] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:5001/api/agencies/${slug}`)
+        fetch(`${getDomain()}/api/agencies/${slug}`)
             .then((res) => res.json())
             .then((data) => setAgency(data))
             .catch((err) => console.error('Error fetching data:', err));
