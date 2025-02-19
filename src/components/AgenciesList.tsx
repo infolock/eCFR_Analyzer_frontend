@@ -63,7 +63,6 @@ const AgenciesList = () => {
                                 </TableSortLabel>
                             </TableCell>
                             <TableCell>Word Count</TableCell>
-                            <TableCell>Related Titles</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -75,7 +74,6 @@ const AgenciesList = () => {
                                         <Link to={agencyPath}>{row.name}</Link>
                                     </TableCell>
                                     <TableCell>{row.wordCount}</TableCell>
-                                    <TableCell>...</TableCell>
                                 </TableRow>
                             );
                         })}
