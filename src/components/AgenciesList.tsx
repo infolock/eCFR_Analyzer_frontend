@@ -1,3 +1,4 @@
+import './styles.css';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead, TableRow, Paper } from '@mui/material';
@@ -50,6 +51,17 @@ const AgenciesList = () => {
 
         fetchData();
     }, []);
+
+    if (!agencies.length) {
+        return (
+            <div className="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        );
+    }
 
     return (
         <div>
