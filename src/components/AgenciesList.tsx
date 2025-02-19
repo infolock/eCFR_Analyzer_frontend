@@ -34,7 +34,7 @@ const AgenciesList = () => {
                 let wordCounts: Record<string, number> = {};
 
                 if (localStorage.getItem('ecrf_word_count')) {
-                    wordCounts = JSON.parse(localStorage.getItem('ecrf_word_count') || '');
+                    wordCounts = JSON.parse(localStorage.getItem('ecrf_word_count') || '{}');
                 }
 
                 for (const agency of data) {
