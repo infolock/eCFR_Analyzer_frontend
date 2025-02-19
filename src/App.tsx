@@ -4,7 +4,6 @@ import { Routes, Route, Link } from 'react-router-dom';
 import TitlesList from './components/TitlesList';
 import AgenciesList from './components/AgenciesList';
 import AgencyDetails from './components/AgencyDetails';
-import WordCountDisplay from './components/WordCountDisplay';
 
 function MainPage() {
     return (
@@ -29,9 +28,6 @@ function App() {
                     <li>
                         <Link to="/agencies">Agencies</Link>
                     </li>
-                    <li>
-                        <Link to="/words/1">Word Count (Example: Agency 1)</Link>
-                    </li>
                 </ul>
             </nav>
 
@@ -40,7 +36,6 @@ function App() {
                 <Route path="/titles" element={<TitlesList />} />
                 <Route path="/agencies" element={<AgenciesList />} />
                 <Route path="/agencies/:slug" element={<AgencyDetails />} />
-                <Route path="/words/:id" element={<WordCountDisplay />} />
             </Routes>
         </div>
     );
