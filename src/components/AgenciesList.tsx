@@ -28,20 +28,29 @@ const AgenciesList = () => {
         const fetchData = async () => {
             try {
                 const res = await fetch(`${getDomain()}/api/agencies`);
-                console.log('Res = ', res);
                 const data = await res.json();
-                console.log('data = ', data);
 
                 const updatedAgencies: Agency[] = [];
-                for (const agency of data) {
-                    const res = await fetch(`${getDomain()}/api/word_counts/${agency.slug}`);
-                    const data = await res.json();
+                let wordCounts: Record<string, number> = {};
 
+                if (localStorage.getItem('ecrf_word_count')) {
+                    wordCounts = JSON.parse(localStorage.getItem('ecrf_word_count') || '');
+                }
+
+                for (const agency of data) {
+                    if (!wordCounts[agency.slug]) {
+                        const res = await fetch(`${getDomain()}/api/word_counts/${agency.slug}`);
+                        const data = await res.json();
+
+                        wordCounts[agency.slug] = data.wordCount;
+                    }
                     updatedAgencies.push({
                         ...(agency as Agency),
-                        wordCount: data.wordCount,
+                        wordCount: wordCounts[agency.slug],
                     });
                 }
+
+                localStorage.setItem('ecrf_word_count', JSON.stringify(wordCounts));
 
                 setAgencies(updatedAgencies);
             } catch (err) {
