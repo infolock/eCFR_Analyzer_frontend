@@ -7,11 +7,13 @@ import { getDomain } from '../env';
 
 const AgenciesList = () => {
     const [agencies, setAgencies] = useState<Agency[]>([]);
+    // these are the things we want to process and request
+    const [wordCountQueue, setWordCountQueue] = useState<string[]>([]);
+    // this will help us maintain a single request until its done processing between intervals...
+    const [isProcessingQueue, setIsProcessingQueue] = useState(false);
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
     // in case we want to add more sortable columns...
     const [orderBy, setOrderBy] = useState<'name'>('name');
-    const [wordCountQueue, setWordCountQueue] = useState<string[]>([]);
-    const [isProcessingQueue, setIsProcessingQueue] = useState(false);
 
     const handleRequestSort = () => {
         const isAsc = order === 'asc';
@@ -27,17 +29,13 @@ const AgenciesList = () => {
     };
 
     const processQueue = async () => {
-        if (isProcessingQueue) {
-            return;
-        }
-
-        setIsProcessingQueue(true);
-
-        // const intervalId = setInterval(async () => {
         // nothing to do...
-        if (!wordCountQueue.length) {
+        if (isProcessingQueue || !wordCountQueue.length) {
             return;
         }
+
+        // process the queue...
+        setIsProcessingQueue(true);
 
         let wordCounts: Record<string, number> = {};
 
@@ -45,7 +43,6 @@ const AgenciesList = () => {
             wordCounts = JSON.parse(localStorage.getItem('ecrf_word_count') || '{}');
         }
 
-        // process the queue...
         try {
             const agencySlug = wordCountQueue.shift() as string;
             const agency = agencies.find((item) => item.slug === agencySlug);
@@ -72,6 +69,7 @@ const AgenciesList = () => {
         } catch (error) {
             console.log('ERROR: ' + error);
         }
+
         setIsProcessingQueue(false);
     };
 
