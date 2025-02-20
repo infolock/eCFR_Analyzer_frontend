@@ -10,6 +10,8 @@ const AgenciesList = () => {
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
     // in case we want to add more sortable columns...
     const [orderBy, setOrderBy] = useState<'name'>('name');
+    const [wordCountQueue, setWordCountQueue] = useState<string[]>([]);
+    const [isProcessingQueue, setIsProcessingQueue] = useState(false);
 
     const handleRequestSort = () => {
         const isAsc = order === 'asc';
@@ -24,35 +26,83 @@ const AgenciesList = () => {
         });
     };
 
+    const processQueue = async () => {
+        if (isProcessingQueue) {
+            return;
+        }
+
+        setIsProcessingQueue(true);
+
+        // const intervalId = setInterval(async () => {
+        // nothing to do...
+        if (!wordCountQueue.length) {
+            return;
+        }
+
+        let wordCounts: Record<string, number> = {};
+
+        if (localStorage.getItem('ecrf_word_count')) {
+            wordCounts = JSON.parse(localStorage.getItem('ecrf_word_count') || '{}');
+        }
+
+        // process the queue...
+        try {
+            const agencySlug = wordCountQueue.shift() as string;
+            const agency = agencies.find((item) => item.slug === agencySlug);
+            if (!agency) {
+                setIsProcessingQueue(false);
+                return;
+            }
+
+            const res = await fetch(`${getDomain()}/api/word_counts/${agencySlug}`);
+            const data = await res.json();
+
+            wordCounts[agencySlug] = data.wordCount;
+            agency.wordCount = data.wordCount;
+
+            const updatedAgencies = agencies.map((item) => {
+                if (item.slug === agencySlug) {
+                    return agency;
+                }
+                return item;
+            });
+
+            localStorage.setItem('ecrf_word_count', JSON.stringify(wordCounts));
+            setAgencies(updatedAgencies);
+        } catch (error) {
+            console.log('ERROR: ' + error);
+        }
+        setIsProcessingQueue(false);
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const res = await fetch(`${getDomain()}/api/agencies`);
                 const data = await res.json();
+                const queue: string[] = [];
 
-                const updatedAgencies: Agency[] = [];
-                let wordCounts: Record<string, number> = {};
+                setAgencies(
+                    data.map((agency: Agency) => {
+                        let wordCounts: Record<string, number> = {};
 
-                if (localStorage.getItem('ecrf_word_count')) {
-                    wordCounts = JSON.parse(localStorage.getItem('ecrf_word_count') || '{}');
-                }
+                        if (localStorage.getItem('ecrf_word_count')) {
+                            wordCounts = JSON.parse(localStorage.getItem('ecrf_word_count') || '{}');
+                        }
 
-                for (const agency of data) {
-                    if (!wordCounts[agency.slug]) {
-                        const res = await fetch(`${getDomain()}/api/word_counts/${agency.slug}`);
-                        const data = await res.json();
+                        if (wordCounts[agency.slug]) {
+                            return {
+                                ...agency,
+                                wordCount: wordCounts[agency.slug],
+                            };
+                        }
 
-                        wordCounts[agency.slug] = data.wordCount;
-                    }
-                    updatedAgencies.push({
-                        ...(agency as Agency),
-                        wordCount: wordCounts[agency.slug],
-                    });
-                }
+                        queue.push(agency.slug);
+                        return agency;
+                    })
+                );
 
-                localStorage.setItem('ecrf_word_count', JSON.stringify(wordCounts));
-
-                setAgencies(updatedAgencies);
+                setWordCountQueue(queue);
             } catch (err) {
                 console.error('Error fetching data:', err);
             }
@@ -60,6 +110,10 @@ const AgenciesList = () => {
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        setInterval(() => processQueue(), 10000);
+    }, [wordCountQueue]);
 
     if (!agencies.length) {
         return (
@@ -95,7 +149,16 @@ const AgenciesList = () => {
                                     <TableCell>
                                         <Link to={agencyPath}>{row.name}</Link>
                                     </TableCell>
-                                    <TableCell>{row.wordCount}</TableCell>
+                                    <TableCell>
+                                        {row.wordCount || (
+                                            <div className="lds-ring">
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                        )}
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}
