@@ -88,3 +88,7 @@ body {
         }
     }
 }
+
+hr.body-divider {
+    border-color: #1f2937;
+}
