@@ -9,7 +9,6 @@ function MainPage() {
     return (
         <div>
             <h1>eCFR Analyzer</h1>
-            <p>Select a page:</p>
         </div>
     );
 }
