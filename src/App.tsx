@@ -8,7 +8,7 @@ import AgencyDetails from './components/AgencyDetails';
 const MainPage = () => {
     return (
         <div>
-            <h3>About this Project</h3>
+            <h1>About this Project</h1>
             <p>
                 The goal of this website is to create a simple solution to analyze Federal Regulations. The eCFR is available at{' '}
                 <a href="https://www.ecfr.gov">https://www.ecfr.gov/</a>. There is a public api for it.
@@ -25,7 +25,7 @@ const App = () => (
                 <div className="flex flex-col">
                     <div className="flex items-center justify-between">
                         <div className="title">
-                            <h1>ECFR Analyzer</h1>
+                            <h3>ECFR Analyzer</h3>
                         </div>
                         <nav>
                             <ul>

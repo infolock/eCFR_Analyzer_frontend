@@ -32,7 +32,6 @@ body {
     width: 100%;
     max-width: 1280px;
     padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
     max-width: 80rem;
     margin-left: auto;
     margin-right: auto;
@@ -43,7 +42,6 @@ body {
 
     .container {
         padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
         max-width: 80rem;
         margin-left: auto;
         margin-right: auto;
