@@ -5,6 +5,8 @@ import { Table, TableBody, TableCell, TableContainer, TableSortLabel, TableHead,
 import { Agency } from '../constants/Agency';
 import { getDomain } from '../env';
 
+const WAIT_TIME_BETWEEN_REQS = 30000;
+
 const AgenciesList = () => {
     const [agencies, setAgencies] = useState<Agency[]>([]);
     // these are the things we want to process and request
@@ -110,7 +112,7 @@ const AgenciesList = () => {
     }, []);
 
     useEffect(() => {
-        setInterval(() => processQueue(), 10000);
+        setInterval(() => processQueue(), WAIT_TIME_BETWEEN_REQS);
     }, [wordCountQueue]);
 
     if (!agencies.length) {
